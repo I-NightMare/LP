@@ -1,0 +1,334 @@
+fcfs
+----------------------------------------------------------------------------------------
+
+
+import java.util.*;
+
+public class fcfs_algo {
+
+		public static void swap(int x,int y)
+		{
+			int temp=x;
+			x=y;
+			y=temp;
+			return;
+		}
+
+	public static void main(String[] args) {
+		
+        // Here We Taking input the no of processes  
+		float AvgTAT=0;
+		float AvgWT=0;
+		Scanner sc=new Scanner(System.in);
+		System.out.println("Enter the no of Procsses: ");
+		int n=sc.nextInt();
+		
+		int pid[] =new int[n];
+		int AT[]=new  int[n];
+		int BT[]=new int[n];
+		int FT[]=new int[n];
+		int TAT[]=new int[n];
+		int wt[]=new int[n];
+		
+		// Here we taking input of Arrival time and Burst time
+		for(int i=0;i<n;i++)
+		{
+			System.out.println("Enter the Arrival time for process "+(i+1)+":");
+			AT[i]=sc.nextInt();
+			System.out.println("Enter the Burst time for process "+(i+1)+":");
+			BT[i]=sc.nextInt();
+			pid[i]=i+1;
+		}
+		
+		
+		//sorting according to finish time 
+		for(int i=0;i<n;i++)
+		{
+			for(int j=i+1;j<n;j++)
+			{
+				if(AT[i] > AT[j])
+				{
+					swap(AT[i],AT[j]);
+					swap(BT[i],BT[j]);
+					swap(pid[i],pid[j]);
+				}
+			}
+		}
+		
+		
+	
+		// Here we finding the finish time
+		for(int i=0;i<n;i++)
+		{
+			if(i==0)
+			{
+				FT[i]=AT[i]+BT[i];
+			}else
+			{
+				if(AT[i] > FT[i-1])
+				{
+					FT[i]=AT[i]+BT[i];
+				}else
+				{
+					FT[i]=FT[i-1]+BT[i];
+				}
+			}
+			TAT[i]=FT[i]-AT[i];
+			wt[i]=TAT[i]-BT[i];
+			AvgTAT+=(float)TAT[i];
+			AvgWT+=(float)wt[i];
+		}
+		
+		
+		
+		System.out.println("Processes\tArrivalTime\tBurstTime\tFinishTime\tTurnTime\tWaitingTime");
+		for(int i=0;i<n;i++)
+		{
+			System.out.println("  "+pid[i]+"  \t\t "+AT[i]+"  \t\t "+BT[i]+"  \t\t "+FT[i]+"  \t\t "+TAT[i]+"  \t\t "+wt[i]);
+		}
+		
+		
+		System.out.println("Average Turn around time is: "+(float)(AvgTAT/n));
+		System.out.println("Average  Waiting Time is: "+(float)(AvgWT/n));
+		System.out.println("Average  ResponseTime is: "+(float)(AvgWT/n));
+		
+		
+	}
+
+}
+----------------------------------------------------------------------------------------------------------------------------------------
+prio
+---------------------------------------------------------------------------------------------------------------------------------------
+import java.util.Scanner;
+ 
+public class PRIO {
+        
+    public static void main(String args[]) {
+            Scanner s = new Scanner(System.in);
+ 
+            int ct[],a[],x,n,p[],pp[],bt[],w[],t[],i,k=0;
+ 		float atat,awt;
+            p = new int[10];
+            pp = new int[10];
+            bt = new int[10];
+            w = new int[10];
+            t = new int[10];
+ 	    a= new int[10];
+	    ct=new int[10];
+   //n is number of process
+   //p is process
+   //pp is process priority
+   //bt is process burst time
+   //w is wait time
+   // t is turnaround time
+   //awt is average waiting time
+   //atat is average turnaround time
+ 
+ 
+   System.out.print("Enter the number of process : ");
+   n = s.nextInt();
+    System.out.print("\n\t Enter burst time : time priorities  : aarival time\n");
+ 
+   for(i=0;i<n;i++)
+    {
+       System.out.print("\nProcess["+(i+1)+"]:");
+      bt[i] = s.nextInt();
+      pp[i] = s.nextInt();
+      a[i]=s.nextInt();
+      p[i]=i+1;
+    }
+ //SORT ON THE BASIS OF ARRIVAL TIME AND PRIORITY
+ for(i=0;i<n-1;i++)
+   {
+    
+     for(int j=i+1;j<n;j++)
+     {
+	
+       if(a[i]>=a[j] || pp[i]>pp[j])
+       {
+     x=pp[i];
+     pp[i]=pp[j];
+     pp[j]=x;
+     x=bt[i];
+     bt[i]=bt[j];
+     bt[j]=x;
+     x=p[i];
+     p[i]=p[j];
+     p[j]=x;
+       x=a[i];
+     a[i]=a[j];
+     a[j]=x;
+   }
+     
+   }
+
+}
+//sorting on the basis of priority
+
+  for(i=1;i<=n;i++)
+   {
+    if(i==1)
+     {  k=bt[0];
+
+	ct[0]=k;}
+    else{
+       k=bt[i-1]+k;
+	ct[i-1]=k;}
+     for(int j=i+1;j<=n;j++)
+     {
+	
+       if(pp[i]<pp[j] && a[j]<=k)
+       {
+     x=pp[i];
+     pp[i]=pp[j];
+     pp[j]=x;
+     x=bt[i];
+     bt[i]=bt[j];
+     bt[j]=x;
+     x=p[i];
+     p[i]=p[j];
+     p[j]=x;
+     x=a[i];
+     a[i]=a[j];
+     a[j]=x;
+   }
+   }
+}
+w[0]=0;
+awt=0;
+t[0]=bt[0];
+atat=t[0];
+for(i=1;i<n;i++)
+ {
+ 
+   t[i]=ct[i]-a[i];
+   w[i]=t[i]-bt[i];
+   awt+=w[i];
+   atat+=t[i];
+ }
+ 
+//prority logic
+
+//Displaying the process
+ 
+  System.out.print("\n\nProcess \t Arrival Time \t Burst Time \t Wait Time \t Turn Around Time   Priority \n");
+for(i=0;i<n;i++)
+  System.out.print("\n   "+p[i]+"\t\t   "+a[i]+"\t\t   "+bt[i]+"\t\t     "+w[i]+"\t\t     "+t[i]+"\t\t     "+pp[i]+"\n");
+awt/=n;
+atat/=n;
+  System.out.print("\n Average Wait Time : "+awt);
+System.out.print("\n Average Turn Around Time : "+atat);
+ 
+        }
+}
+--------------------------------------------------------------------------------------------------------------------------------------
+srtf
+----------------------------------------------------------------------------------------------------------------------------------
+import java.io.*;
+public class SRTF {
+ public static void main(String args[]) throws IOException
+ {
+  BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+      int n;
+      System.out.println("Please enter the number of Processes: ");
+       n = Integer.parseInt(br.readLine());
+       int proc[][] = new int[n + 1][4];//proc[][0] is the AT array,[][1] - RT,[][2] - WT,[][3] - TT
+       for(int i = 1; i <= n; i++)
+       {
+      System.out.println("Please enter the Arrival Time for Process " + i + ": ");
+      proc[i][0] = Integer.parseInt(br.readLine());
+      System.out.println("Please enter the Burst Time for Process " + i + ": ");
+      proc[i][1] = Integer.parseInt(br.readLine());
+     }
+       System.out.println();
+     
+       //Calculation of Total Time and Initialization of Time Chart array
+     int total_time = 0;
+     for(int i = 1; i <= n; i++)
+     {
+      total_time += proc[i][1];
+     }
+     int time_chart[] = new int[total_time];
+     
+     for(int i = 0; i < total_time; i++)
+     {
+      //Selection of shortest process which has arrived
+      int sel_proc = 0;
+      int min = 99999;
+      for(int j = 1; j <= n; j++)
+      {
+       if(proc[j][0] <= i)//Condition to check if Process has arrived
+       {
+        if(proc[j][1] < min && proc[j][1] != 0)
+        {
+         min = proc[j][1];
+         sel_proc = j;
+        }
+       }
+      }
+      
+      //Assign selected process to current time in the Chart
+      time_chart[i] = sel_proc;
+      
+      //Decrement Remaining Time of selected process by 1 since it has been assigned the CPU for 1 unit of time
+      proc[sel_proc][1]--;
+      
+      //WT and TT Calculation
+      for(int j = 1; j <= n; j++)
+      {
+       if(proc[j][0] <= i)
+       {
+        if(proc[j][1] != 0)
+        {
+         proc[j][3]++;//If process has arrived and it has not already completed execution its TT is incremented by 1
+            if(j != sel_proc)//If the process has not been currently assigned the CPU and has arrived its WT is incremented by 1
+             proc[j][2]++;
+        }
+        else if(j == sel_proc)//This is a special case in which the process has been assigned CPU and has completed its execution
+         proc[j][3]++;
+       }
+      }
+      
+      //Printing the Time Chart
+      if(i != 0)
+      {
+       if(sel_proc != time_chart[i - 1])
+        //If the CPU has been assigned to a different Process we need to print the current value of time and the name of 
+        //the new Process
+       {
+        System.out.print("--" + i + "--P" + sel_proc);
+       }
+      }
+      else//If the current time is 0 i.e the printing has just started we need to print the name of the First selected Process
+       System.out.print(i + "--P" + sel_proc);
+      if(i == total_time - 1)//All the process names have been printed now we have to print the time at which execution ends
+       System.out.print("--" + (i + 1));
+      
+     }
+     System.out.println();
+     System.out.println();
+     
+     //Printing the WT and TT for each Process
+     System.out.println("P\t WT \t TT ");
+     for(int i = 1; i <= n; i++)
+     {
+      System.out.printf("%d\t%2dms\t%2dms",i,proc[i][2],proc[i][3]);
+      System.out.println();
+     }
+     
+     System.out.println();
+     
+     //Printing the average WT & TT
+     float WT = 0,TT = 0;
+     for(int i = 1; i <= n; i++)
+     {
+      WT += proc[i][2];
+      TT += proc[i][3];
+     }
+     WT /= n;
+     TT /= n;
+     System.out.println("The Average WT is: " + WT + "ms");
+     System.out.println("The Average TT is: " + TT + "ms");
+ }
+    
+}
